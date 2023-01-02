@@ -1,0 +1,192 @@
+ScreenManager:
+    MainScreen:
+    UsdScreen:
+    AudScreen:
+    EurScreen:
+    UsdChartScreen:
+    AudChartScreen:
+    EurChartScreen:
+
+<MainScreen>:
+    name:'main'
+    MDTopAppBar:
+        pos_hint:{"top":1}
+        title:"Kalkulator walut"
+    Image:
+        source:"logo.png"
+        size_hint:.6,.6
+        pos_hint:{"center_x":.5,"center_y":.7}
+    MDFillRoundFlatButton:
+        text:"USD"
+        pos_hint:{"center_x":0.2,"center_y":0.4}
+        font_size:"40dp"
+        on_release:
+            app.root.transition.direction = 'right'
+            app.root.current = 'usd'
+    MDFillRoundFlatButton:
+        text:"AUD"
+        pos_hint:{"center_x":0.5,"center_y":0.4}
+        font_size:"40dp"
+        on_release:
+            app.root.transition.direction = 'up'
+            app.root.current = 'aud'
+    MDFillRoundFlatButton:
+        text:"EUR"
+        pos_hint:{"center_x":0.8,"center_y":0.4}
+        font_size:"40dp"
+        on_release:
+            app.root.transition.direction = 'left'
+            app.root.current = 'eur'
+
+
+
+<CurrencyScreen>:
+    MDList:
+        padding:"40dp","0dp"
+        spacing:"15dp"
+        pos_hint:{"center_y":.5}
+        MDLabel:
+            halign:"center"
+            font_size:"20dp"
+            text:f"Aktualny kurs {root.code} wynosi {root.current_rate}"
+        FloatInput:
+            id:input
+            halign:"center"
+            size_hint:1,None
+            width:"40dp"
+            hint_text:f"Podaj wartość w {root.code}"
+            mode:"rectangle"
+        MDList:
+            BoxLayout:
+                spacing:"8dp"
+                padding:0, "-30dp"
+                MDFillRoundFlatIconButton:
+                    icon:"swap-vertical"
+                    text:"Odwróć"
+                    font_size:"20dp"
+                    on_release:root.switch()
+                MDFillRoundFlatIconButton:
+                    icon:"calculator"
+                    font_size:"20dp"
+                    text:"Przelicz"
+                    on_release:root.calc()
+    MDList:
+        padding:"40dp", 0
+        spacing:"30dp"
+        pos_hint:{"center_y":.66}
+        MDLabel:
+            font_size:"20dp"
+            theme_text_color:"Secondary"
+            text:"Wynik:"
+            halign:"center"
+        MDLabel:
+            id:result
+            font_size:"35dp"
+            text:""
+            halign:"center"
+
+
+
+
+<UsdScreen>:
+    BackButton:
+        on_release:
+            app.root.transition.direction = 'left'
+            app.root.current='main'
+    ChartButton:
+        on_release:app.root.current=f'usd_chart'
+
+<AudScreen>:
+    BackButton:
+        on_release:
+            app.root.transition.direction = 'down'
+            app.root.current='main'
+    ChartButton:
+        on_release:app.root.current=f'aud_chart'
+
+<EurScreen>:
+    BackButton:
+        on_release:
+            app.root.transition.direction = 'right'
+            app.root.current='main'
+    ChartButton:
+        on_release:app.root.current=f'eur_chart'
+
+<CurrencyChartScreen>:
+    MDList:
+        pos_hint:{"top":.85}
+        MDLabel:
+            halign:"center"
+            font_size:"40dp"
+            text:f"Wykres waluty {root.code}"
+    MDList:
+        pos_hint:{"top":.2}
+        MDLabel:
+            halign:"center"
+            theme_text_color:"Secondary"
+            font_size:"20dp"
+            text:"Typ wykresu"
+
+    Image:
+        id:chart_image
+        pos_hint:{"center_y":0.5}
+        source:root.image_path
+        allow_stretch:True
+    MyToggleButton:
+        pos_hint:{"center_x":.1,"center_y":.1}
+        text:"1M"
+        group:f"{root.code}_interval"
+        state:"down"
+        on_state:root.change_image(self,self.state)
+    MyToggleButton:
+        pos_hint:{"center_x":.3,"center_y":.1}
+        text:"3M"
+        group:f"{root.code}_interval"
+        on_state:root.change_image(self,self.state)
+    MyToggleButton:
+        pos_hint:{"center_x":.5,"center_y":.1}
+        text:"6M"
+        group:f"{root.code}_interval"
+        on_state:root.change_image(self,self.state)
+    MyToggleButton:
+        pos_hint:{"center_x":.7,"center_y":.1}
+        text:"1Y"
+        group:f"{root.code}_interval"
+        on_state:root.change_image(self,self.state)
+    MyToggleButton:
+        pos_hint:{"center_x":.9,"center_y":.1}
+        text:"3Y"
+        group:f"{root.code}_interval"
+        on_state:root.change_image(self,self.state)
+
+
+<UsdChartScreen>:
+    BackButton:
+        on_release:
+            app.root.transition.direction = 'left'
+            app.root.current='usd'
+
+<AudChartScreen>:
+    BackButton:
+        on_release:
+            app.root.transition.direction = 'down'
+            app.root.current='aud'
+
+<EurChartScreen>:
+    BackButton:
+        on_release:
+            app.root.transition.direction = 'right'
+            app.root.current='eur'
+
+
+<BackButton@MDFillRoundFlatIconButton>:
+    pos_hint:{"top":.98,"right":.98}
+    text:"Powrót"
+    font_size:"20dp"
+    icon:"arrow-left"
+
+<ChartButton@MDFillRoundFlatIconButton>:
+    pos_hint:{"center_x":0.5,"center_y":.05}
+    font_size:"20dp"
+    icon:"chart-bar"
+    text:"Wykresy"
